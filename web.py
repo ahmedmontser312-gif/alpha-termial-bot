@@ -1,8 +1,8 @@
 import os
+import traceback
 from threading import Thread
 from flask import Flask
 
-# 1. إنشاء تطبيق ويب وهمي عشان رندر يرضى وما يدينا خطأ 502
 app = Flask('')
 
 @app.route('/')
@@ -14,9 +14,15 @@ def run_web():
     app.run(host='0.0.0.0', port=port)
 
 if __name__ == '__main__':
-    # 2. تشغيل سيرفر الويب الوهمي في الخلفية أولاً
+    # 1. تشغيل سيرفر الويب أولاً ليبقى رندر سعيداً
     t = Thread(target=run_web)
     t.start()
     
-    # 3. تشغيل ملف البوت الأصلي حقك (bot بدون .py)
-    import bot
+    print("Web server started. Now launching bot.py...")
+    
+    # 2. محاولة تشغيل البوت مع طباعة أي خطأ قد يحدث بشكل دقيق
+    try:
+        import bot
+    except Exception as e:
+        print("❌ Error occurred while starting bot:")
+        traceback.print_exc()
