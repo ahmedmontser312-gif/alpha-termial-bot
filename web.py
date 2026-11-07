@@ -1,6 +1,5 @@
 import os
-import traceback
-from threading import Thread
+import subprocess
 from flask import Flask
 
 app = Flask('')
@@ -14,15 +13,12 @@ def run_web():
     app.run(host='0.0.0.0', port=port)
 
 if __name__ == '__main__':
-    # 1. تشغيل سيرفر الويب أولاً ليبقى رندر سعيداً
-    t = Thread(target=run_web)
+    # 1. تشغيل سيرفر الويب في الخلفية كـ Thread عادي
+    import threading
+    t = threading.Thread(target=run_web)
     t.start()
     
-    print("Web server started. Now launching bot.py...")
+    print("Web server running. Now launching bot.py as an independent process...")
     
-    # 2. محاولة تشغيل البوت مع طباعة أي خطأ قد يحدث بشكل دقيق
-    try:
-        import bot
-    except Exception as e:
-        print("❌ Error occurred while starting bot:")
-        traceback.print_exc()
+    # 2. تشغيل البوت كعملية مستقلة تماماً (Process) لضمان عمله جنباً إلى جنب مع السيرفر
+    subprocess.Popen(["python", "bot.py"])
