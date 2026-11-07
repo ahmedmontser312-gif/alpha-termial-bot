@@ -1,0 +1,4 @@
+python-telegram-bot
+solana
+bip-utils
+httpx
